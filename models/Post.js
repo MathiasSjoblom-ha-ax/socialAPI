@@ -8,7 +8,6 @@ const PostSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
     },
     likes: {
         type: Array,
@@ -17,10 +16,6 @@ const PostSchema = new mongoose.Schema({
     description: {
         type: String,
         max: 100
-    },
-    duration: {
-        type: Number,
-        //required: true
     }
 },
 {timestamps: true}

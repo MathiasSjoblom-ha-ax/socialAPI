@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { response } = require("express");
+//const { response } = require("express");
 const Post = require("../models/Post");
 const User = require("../models/User");
 
@@ -49,7 +49,7 @@ router.put("/:id/like", async(request, response) => {
     try {
         const post = await Post.findById(request.params.id);
         if(!post.likes.includes(request.body.userId)) {
-            await post.updateOne({$push:{likes:request.body.userId}});
+            await post.updateOne({$push:{likes: request.body.userId}});
             response.status(200).json("Post liked")
         } else {
             await post.updateOne({$pull:{likes: request.body.userId}});
@@ -81,6 +81,28 @@ router.get("/feed/:userId", async(request, response) => {
             })
         );
         response.status(200).json(posts.concat(...followingPosts));
+    } catch (error) {
+        response.status(500).json(err)
+    }
+});
+
+//Hämta användares posts
+router.get("/profile/:username", async (request, response) => {
+    try {
+      const user = await User.findOne({ username: request.params.username });
+      const posts = await Post.find({ userId: user._id });
+      response.status(200).json(posts);
+    } catch (response) {
+      response.status(500).json(response);
+    }
+  });
+
+//Hämta profile feed posts
+router.get("/profile/:username", async(request, response) => {
+    try {
+        const user = await User.findOne({username:request.params.username});
+        const posts = await Post.find({userId:user._id});
+        response.status(200).json(posts);
     } catch (error) {
         response.status(500).json(err)
     }

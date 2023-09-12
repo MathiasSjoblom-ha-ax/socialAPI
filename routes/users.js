@@ -32,9 +32,11 @@ router.delete("/:id", async (request, response) => {
 })
 
 //hitta user
-router.get("/:id", async (request, response) => {
+router.get("/", async (request, response) => {
+    const username = request.query.username;
+    const userId = request.query.userId;
     try{
-        const user = await User.findById(request.params.id);
+        const user = userId ? await User.findById(userId) : await User.findOne({username:username}); //Om det finns ett ID i query:n använd det annars använd användarnamn
         const {password, updatedAt, ...other} = user._doc
         response.status(200).json(other);
     } catch (err) {
